@@ -6,7 +6,9 @@ Goals:
 
 Changes: 
 
-    Updated, Buffed, and finely Balanced stats and loadouts of all Vanilla Standard/Royal/Militia/Mercenary/Bandit Troops:
+    Updated, buffed, and finely balanced stats and loadouts of all Vanilla Standard/Royal/Militia/Mercenary/Bandit Troops:
+
+        TODO: Militia/Merc/Bandits
 
         Stats updated according to Stat Rules (See "rules.txt").
 
@@ -20,23 +22,31 @@ Changes:
 
         Fixed many disparities in gear quality as troops advanced through their factions' upgrade trees.
 
-        Added/Removed/Changed weapons of certain troops to make them more useful to their roles.
+        Added/Removed/Changed weapons and armors of almost all troops to make them more useful and fitting to their roles.
 
-    Updated NPC parties:
-        
-        TODO: NPC parties will now have more diverse troops and will make use of all their factions' troops.
-        NPC parties across factions now have more equal starting numbers
+    Updated NPC party spawns:
 
-        TODO: Forest/Sea-Raider/Mountain/Desert/Steppe Bandit parties will now always include a Bandit Boss
+        TODO: NPC parties will now spawn with more diverse troops and will spawn making use of all their factions' troops.
+        NPC parties across factions now have more equal starting numbers.
 
+        TODO: Forest/Sea-Raider/Mountain/Desert/Steppe Bandit parties will now always include a Bandit Boss.
 
-    Updated some weapons to be more useful and offer more variety.
+    Gear:
+        Updated vanilla weapons and created new weapons to offer more use and variety.
+
+        Update armors to offer more use and variety.
 
     
 
 To install:
 
     1.) Unzip me into your "Mount & Blade II Bannerlord/Modules" folder.
+    2.) Check the box in the Mods section of the game launcher.
 
-    2.) If in a game that was started using vanilla troops, start a new SandBox / StoryMode campaign with the mod active.
-        (Blame TaleWorlds for this, it can't be helped)
+To uninstall:
+    
+    1.) Delete the extracted content.
+
+Installation Notes:
+
+    - Save-game safe. Doesn't have any permanent effects and can be activated/deactivated whenever.
