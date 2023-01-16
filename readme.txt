@@ -36,7 +36,9 @@ Changes:
 
         Update armors to offer more use and variety.
 
-    
+    AI:
+        
+        Tweaked various AI settings to make in-mission troops generally less weak.
 
 To install:
 

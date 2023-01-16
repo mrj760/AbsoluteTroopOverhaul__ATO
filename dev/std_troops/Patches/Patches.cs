@@ -121,9 +121,11 @@ namespace std_troops.Patches
         public static void SetAiProperties(
             ref AgentStatCalculateModel __instance, ref Agent agent, ref AgentDrivenProperties agentDrivenProperties, WeaponComponentData equippedItem, WeaponComponentData secondaryItem)
         {
+            if (agent.IsPlayerControlled) return;
+
             string agentname = agent.Character.Name.ToString(); // Debug info
 
-            // Get skill values
+            //** Get skill values
             MethodInfo GetMeleeSkill = typeof(AgentStatCalculateModel).GetMethod("GetMeleeSkill", BindingFlags.NonPublic | BindingFlags.Instance);
             GetMeleeSkill.DeclaringType.GetMethod("GetMeleeSkill");
             SkillObject eqitemskill = equippedItem == null ? DefaultSkills.Athletics : equippedItem.RelevantSkill;
@@ -131,7 +133,7 @@ namespace std_troops.Patches
             int melskill = (int)GetMeleeSkill.Invoke(__instance, new object[] { agent, equippedItem, secondaryItem });
             int effskill = __instance.GetEffectiveSkill(agent.Character, agent.Origin, agent.Formation, eqitemskill);
 
-            // Translate skill values to usable numbers for AI calculation
+            //** Translate skill values to usable numbers for AI calculation
             float diffmod = __instance.GetDifficultyModifier();
             float mellvl = CalcAILevel(melskill, diffmod);
             float invmellvl = 1f - mellvl;
@@ -139,7 +141,7 @@ namespace std_troops.Patches
             float invefflvl = MBMath.ClampFloat(1f - efflvl, 0f, 1f);
             float def = agent.Defensiveness;
 
-            // Defense Probabilities (I think `def` will always be 0, 1, or 2, with 2 being the most defensive)
+            //** Defense Probabilities (I think `def` will always be 0, 1, or 2, with 2 being the most defensive)
             float prevshieldmissile = agentDrivenProperties.AiUseShieldAgainstEnemyMissileProbability;
             float prevranddefchance = agentDrivenProperties.AiRandomizedDefendDirectionChance;
             float shieldmissilechance;  // y = ln(x + z)        ... z is varying constant
@@ -163,73 +165,58 @@ namespace std_troops.Patches
             agentDrivenProperties.AiRandomizedDefendDirectionChance = randdefchance;
 
 
-            // Horse Missile Properties (Longer range than vanilla)
+            //** Horse Missile Properties (Shorter range than vanilla)
             float prevhorsemissilerange = agentDrivenProperties.AiRangedHorsebackMissileRange;
-            float horsemissilerange = .5f + efflvl * .3f;
+            float horsemissilerange = .25f + (.3f*efflvl);
             agentDrivenProperties.AiRangedHorsebackMissileRange = horsemissilerange;
 
-            // Horse Melee Properties (Shorter target distance than vanilla)
+            //** Horse Melee Properties (Shorter charge target distance than vanilla)
             float prevhorsechargedist = agentDrivenProperties.AiChargeHorsebackTargetDistFactor;
-            float horsechargedist = 1.5f * (2f - efflvl);
+            float horsechargedist = 1.5f * (2.5f - mellvl);
             agentDrivenProperties.AiChargeHorsebackTargetDistFactor = horsechargedist;
 
-            // Shot Errors
+            //** Shot Errors
             float prevrangerhorerror = agentDrivenProperties.AiRangerHorizontalErrorMultiplier;
             float prevrangerleadmin = agentDrivenProperties.AiRangerLeadErrorMin;
             float prevrangerleadmax = agentDrivenProperties.AiRangerLeadErrorMax;
             float prevshooterror = agentDrivenProperties.AiShooterError;
 
-            float rangerhorerror = invefflvl * 0.06981317f; //  {y = (1-x)*(2pi/90)} (less accurate than vanilla)
+            //float rangerhorerror = invefflvl * 0.06981317f; //  {y = (1-x)*(2pi/90)} (less accurate than vanilla)
             float rangerleadmin = -.18f * invefflvl; // y = -.15(1-x) (more accurate than vanilla)
             float rangerleadmax = .18f * invefflvl;  // y = .15(1-x)  (less accurate than vanilla)
             float shooterror = .01f - (.005f * efflvl); // y = .01 - .005x (vanilla is a flat .008 , now ranges from .01 to .005)
 
-            agentDrivenProperties.AiRangerHorizontalErrorMultiplier = rangerhorerror;
+            //agentDrivenProperties.AiRangerHorizontalErrorMultiplier = rangerhorerror;
             agentDrivenProperties.AiRangerLeadErrorMin = rangerleadmin;
             agentDrivenProperties.AiRangerLeadErrorMax = rangerleadmax;
             agentDrivenProperties.AiShooterError = shooterror;
 
-            // Movement Penalties
+            //** Movement Penalties
             float v = agent.MovementVelocity.Length;
-            float prevmaxmoveaccpen = agentDrivenProperties.WeaponMaxMovementAccuracyPenalty;
+            //float prevmaxmoveaccpen = agentDrivenProperties.WeaponMaxMovementAccuracyPenalty;
             float prevmaxmoveunstpen = agentDrivenProperties.WeaponMaxUnsteadyAccuracyPenalty;
             float prevrelmovepen = agentDrivenProperties.ReloadMovementPenaltyFactor;
 
-            float maxmoveaccpen = (efflvl - 1f) * (-.05f*(efflvl + v)) * (.2f*v); // y = (x-1) * -.05(x+v) * .2v
+            //float maxmoveaccpen = (efflvl - 1f) * (-.05f*(efflvl + v)) * (.2f*v); // y = (x-1) * -.05(x+v) * .2v
             float maxmoveunstpen = (efflvl - 1f) * (-.025f * (efflvl + v)) * (.2f * v); // y = (x-1) * -.025(x+v) * .2v
             float relmovepen = invefflvl ; // y = 1-x ... vanilla : constant 1
 
-            agentDrivenProperties.WeaponMaxMovementAccuracyPenalty = maxmoveaccpen;
+            //agentDrivenProperties.WeaponMaxMovementAccuracyPenalty = maxmoveaccpen;
             agentDrivenProperties.WeaponMaxUnsteadyAccuracyPenalty = maxmoveunstpen;
             agentDrivenProperties.ReloadMovementPenaltyFactor = relmovepen;
 
-            // Rotation Penalties
+            //** Rotation Penalties
             float prevweaprotaccpen = agentDrivenProperties.WeaponRotationalAccuracyPenaltyInRadians;
-            float weaprotaccpen = invefflvl * 0.02f; // y = .02(1-x) ... vanilla : ?
+            float weaprotaccpen = .12f * invefflvl; // y = .12(1-x) ... less than vanilla ?
             agentDrivenProperties.WeaponRotationalAccuracyPenaltyInRadians = weaprotaccpen;
 
-            // Shot Frequency Properties
-            float prevwaittime = agentDrivenProperties.WeaponBestAccuracyWaitTime;
-            float prevshootfreq = agentDrivenProperties.AiShootFreq;
-
-            float waittime = MBMath.ClampFloat(invefflvl * 4f, 1.2f, 4f); // y = 4x ... vanilla : ?
-            float shootfreq = MBMath.ClampFloat(invefflvl * 3.69f, .1f, 4.33f); // y = 3.69x ... vanilla : ?
-            //    ^^^<Warning> : Never shoots if set to 0
-
-            agentDrivenProperties.WeaponBestAccuracyWaitTime = waittime;
-            agentDrivenProperties.AiShootFreq = shootfreq;
-
-
-            bool readytoshoot = 
-                agent.Formation != null 
-                && !agent.Formation.QuerySystem.IsInfantryFormation 
-                && agent.IsRangedCached;
-            if (readytoshoot)
+            //** Throwable specific changes
+            if (equippedItem.RelevantSkill != WeaponComponentData.GetRelevantSkillFromWeaponClass(WeaponClass.Bow)
+                && equippedItem.RelevantSkill != WeaponComponentData.GetRelevantSkillFromWeaponClass(WeaponClass.Crossbow))
             {
-                agent.SetScriptedCombatFlags(agent.GetScriptedCombatFlags() | Agent.AISpecialCombatModeFlags.IgnoreAmmoLimitForRangeCalculation);
+                shooterror *= .4f; // Make throwables much more accurate since they're more limited
+                horsemissilerange *= .6f; // Make mounted throwers fire from closer distance
             }
-
-            // agent.SetScriptedCombatFlags(agent.GetScriptedCombatFlags() | Agent.AISpecialCombatModeFlags.IgnoreAmmoLimitForRangeCalculation);
 
             if (comma_held)
             {
