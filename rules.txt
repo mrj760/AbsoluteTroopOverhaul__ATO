@@ -1,0 +1,113 @@
+Preface Explanation:
+	
+	Every troop has one* "main" stat based on what role I think they're best suited for. *(See "Exceptions")
+	Every troop has "secondary" stat(s) based on what other types of weapons they are equipped with.
+	
+	The athletic and riding skills are determined by faction. 
+		
+		Vlandia & Empire:
+			Standard values.
+		
+		Aserai & Khuzait:
+			Nerfed in Athletics. Buffed in Riding.
+		
+		Battania & Sturgia:
+			Buffed in Athletics. Nerfed in Riding.
+		
+		The buff/nerf amount is laid out below by level in parentheses with the (±) symbol.
+
+
+Stat Values:
+
+	Standard Infantry/Ranged (Baseline):
+
+		Tier 1:  Main: 30;  Sec: 30;  Ath: 20  (±2);  Rid: 10  (±2);  Etc: 10
+		Tier 2: Main: 70;  Sec: 40;  Ath: 40  (±3);  Rid: 25  (±3);  Etc: 20
+		Tier 3: Main: 100; Sec: 70;  Ath: 70  (±5);  Rid: 50  (±5);  Etc: 40
+		Tier 4: Main: 130; Sec: 100; Ath: 100 (±7);  Rid: 75  (±7);  Etc: 60
+		Tier 5: Main: 160; Sec: 130; Ath: 130 (±10); Rid: 100 (±10); Etc: 90
+		
+
+	Standard Cavalry/Horse-Archer (Baseline):
+		
+		Tier 2: Main: 70;  Sec: 40;  Ath: 25  (±3);  Rid: 40  (±3);  Etc: 20
+		Tier 3: Main: 100; Sec: 70;  Ath: 50  (±5);  Rid: 70  (±5);  Etc: 40
+		Tier 4: Main: 130; Sec: 100; Ath: 75  (±7);  Rid: 100 (±7);  Etc: 60
+		Tier 5: Main: 160; Sec: 130; Ath: 100 (±10); Rid: 130 (±10); Etc: 90
+		
+
+	Royal Infantrry/Ranged (Much Higher than Baseline):
+
+		Tier 2: Main: 100; Sec: 70;  Ath: 60  (±5);  Rid: 40  (±5);  Etc: 40
+		Tier 3: Main: 130; Sec: 100; Ath: 95  (±6);  Rid: 70  (±6);  Etc: 70
+		Tier 4: Main: 160; Sec: 130; Ath: 120 (±6);  Rid: 100 (±6);  Etc: 90
+		Tier 5: Main: 200; Sec: 170; Ath: 160 (±10); Rid: 130 (±10); Etc: 120
+		Tier 6: Main: 260; Sec: 220; Ath: 220 (±20); Rid: 160 (±20); Etc: 150
+		
+		
+	Royal Cavalry/Horse-Archer (Much Higher than Baseline):
+
+		Tier 2: Main: 100; Sec: 70;  Ath: 40  (±5);  Rid: 60  (±5);  Etc: 40
+		Tier 3: Main: 130; Sec: 100; Ath: 70  (±6);  Rid: 95  (±6);  Etc: 70
+		Tier 4: Main: 160; Sec: 130; Ath: 100 (±6);  Rid: 120 (±6); Etc: 90
+		Tier 5: Main: 200; Sec: 170; Ath: 130 (±10); Rid: 160 (±10); Etc: 120
+		Tier 6: Main: 260; Sec: 220; Ath: 160 (±20); Rid: 220 (±20); Etc: 150
+
+
+	Militia & Bandits (Lower than Baseline):
+
+		Tier 1:  Main: 25;  Sec: 25;  Ath: 20 ;  Rid: 10 ;  Etc: 10
+		Tier 3: Main: 90;  Sec: 60;  Ath: 60 ;  Rid: 40 ;  Etc: 30
+
+
+	Mercenaries (Slightly Higher than Baseline):
+
+		Tier 2: Main: 75;  Sec: 45;  Ath/Rid: 45/30   (±3);  Etc: 30
+		Tier 3: Main: 105; Sec: 75;  Ath/Rid: 75/55   (±5);  Etc: 50
+		Tier 4: Main: 135; Sec: 105; Ath/Rid: 105/80  (±7);  Etc: 70
+		Tier 5: Main: 170; Sec: 140; Ath/Rid: 135/105 (±10); Etc: 100
+
+	Minor Factions (Higher than Baseline):
+
+		TODO : Raise Higher
+		Tier 2: Main: 75;  Sec: 45;  Ath/Rid: 45/30   (±3);  Etc: 30
+		Tier 3: Main: 105; Sec: 75;  Ath/Rid: 75/55   (±5);  Etc: 50
+		Tier 4: Main: 135; Sec: 105; Ath/Rid: 105/80  (±7);  Etc: 70
+		Tier 5: Main: 170; Sec: 140; Ath/Rid: 135/105 (±10); Etc: 100
+
+
+Exceptions:
+
+	Recruits [Tier 1] have multiple main stats to account for random loadouts.
+
+	For the below equations, "x" is the ±Ath/Rid variance at a troop's level
+
+	Having 0 secondary stats brings main stat up by:
+		2 * x
+			(e.g. Main stat @ Tier 5 goes up by 20)
+
+    Having 1 secondary stat has no effect on main stat.
+
+	Having 2 secondary stats brings main stat down by: 
+		1 * x
+			(e.g. Main stat @ Tier 3 goes down by 5)
+
+	Having 3 secondary stats brings main stat down by: 
+		1.5 * x
+			(e.g. Royal troop main stat @ Tier 4 goes down by 9)
+
+	Many Empire troops trade some main stat points for secondary stat points to keep with the theme of being a wide-utility faction.
+		(e.g. 130,100 ==> 115,115)
+
+	Militia troops do not have any faction-based Ath/Rid/main stat variations.
+
+
+Approximate Body Armor Ranges (per tier for standard soldiers):
+
+	T1: < 10
+	T2: 10-25 armor
+	T3: 20-35
+	T4: 30-45
+	T5: 40-55
+
+	Where a troop falls in this range is based on offensive ability (ability to deal damage) of both themselves and their faction.

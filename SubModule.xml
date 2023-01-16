@@ -1,0 +1,77 @@
+<Module>
+    <Name value="Standardized And Buffed Troops" />
+    <Id value="StandardizedAndBuffedTroops" />
+    <Version value="v1.0.0" />
+    <SingleplayerModule value="true" />
+    <MultiplayerModule value="false" />
+    <!-- <ModuleCategory value="Singleplayer"/> -->
+    <DependedModules>
+        <DependedModule Id="Native" Optional="false"/>
+        <DependedModule Id="SandBoxCore" Optional="false"/>
+        <DependedModule Id="Sandbox" Optional="false"/>
+        <DependedModule Id="StoryMode" Optional="false"/>
+        <DependedModule Id="Bannerlord.Harmony" Optional="false"/>
+    </DependedModules>
+    <SubModules>
+        <SubModule>
+            <Name value="std_troops"/>
+            <DLLName value="std_troops.dll"/>
+            <SubModuleClassType value="std_troops.Fix"/>
+            <Tags>
+                <Tag key="DedicatedServerType" value="none" />
+                <Tag key="IsNoRenderModeElement" value="false" />
+            </Tags>
+        </SubModule>
+    </SubModules>
+    <Xmls>
+        <XmlNode>
+            <XmlName id="CraftingPieces" path="_crafting_pieces" />
+            <IncludedGameTypes>
+                <GameType value="Campaign" />
+                <GameType value="CampaignStoryMode" />
+            </IncludedGameTypes>
+        </XmlNode>
+        <XmlNode>
+            <XmlName id="CraftingTemplates" path="_crafting_templates" />
+            <IncludedGameTypes>
+                <GameType value="Campaign" />
+                <GameType value="CampaignStoryMode" />
+            </IncludedGameTypes>
+        </XmlNode>
+        <XmlNode>
+            <XmlName id="WeaponDescriptions" path="_weapon_descriptions" />
+            <IncludedGameTypes>
+                <GameType value="Campaign" />
+                <GameType value="CampaignStoryMode" />
+            </IncludedGameTypes>
+        </XmlNode>
+        <XmlNode>
+            <XmlName id="Items" path="_items" />
+            <IncludedGameTypes>
+                <GameType value="Campaign" />
+                <GameType value="CampaignStoryMode" />
+            </IncludedGameTypes>
+        </XmlNode>
+        <XmlNode>
+            <XmlName id="NPCCharacters" path="_troops" />
+            <IncludedGameTypes>
+                <GameType value="Campaign" />
+                <GameType value="CampaignStoryMode" />
+            </IncludedGameTypes>
+        </XmlNode>
+        <XmlNode>
+            <XmlName id="SkillSets" path="_skill_sets" />
+            <IncludedGameTypes>
+                <GameType value="Campaign" />
+                <GameType value="CampaignStoryMode" />
+            </IncludedGameTypes>
+        </XmlNode>
+        <XmlNode>
+            <XmlName id="partyTemplates" path="_parties" />
+            <IncludedGameTypes>
+                <GameType value="Campaign" />
+                <GameType value="CampaignStoryMode" />
+            </IncludedGameTypes>
+        </XmlNode>
+    </Xmls>
+</Module>
