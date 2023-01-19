@@ -60,9 +60,9 @@
             <skills>
                 <skill id="Athletics" value="37" />
                 <skill id="Riding" value="28" />
-                <skill id="OneHanded" value="67" />
+                <skill id="OneHanded" value="70" />
                 <skill id="TwoHanded" value="20" />
-                <skill id="Polearm" value="40" />
+                <skill id="Polearm" value="20" />
                 <skill id="Bow" value="20" />
                 <skill id="Crossbow" value="20" />
                 <skill id="Throwing" value="40" />
@@ -73,26 +73,40 @@
             </upgrade_targets>
             <Equipments>
                 <EquipmentRoster>
-                    <equipment slot="Item0" id="Item.eastern_spear_1_t2" />
-                    <equipment slot="Item1" id="Item.desert_throwing_knife" />
-                    <equipment slot="Item2" id="Item.bound_desert_round_shield" />
-                    <equipment slot="Item3" id="Item.aserai_sword_1_t2" />
-                    <equipment slot="Head" id="Item.tuareg" />
-                    <equipment slot="Body" id="Item.reinforced_suede_armor" />
-                    <equipment slot="Leg" id="Item.eastern_leather_boots" />
-                    <equipment slot="Gloves" id="Item.buttoned_leather_bracers" />
-                    <!-- <equipment slot="Cape" id="Item.stitched_leather_shoulders" /> -->
-                </EquipmentRoster>
-                <EquipmentRoster>
-                    <equipment slot="Item0" id="Item.eastern_spear_1_t2" />
-                    <equipment slot="Item1" id="Item.desert_throwing_knife" />
-                    <equipment slot="Item2" id="Item.bound_desert_round_shield" />
-                    <equipment slot="Item3" id="Item.aserai_mace_1_t2" />
+                    <!-- <equipment slot="Item0" id="Item.eastern_spear_1_t2" /> -->
+                    <equipment slot="Item0" id="Item.aserai_sword_1_t2" />
+                    <equipment slot="Item1" id="Item.bound_desert_round_shield" />
+                    <equipment slot="Item2" id="Item.desert_throwing_knife" />
+                    <equipment slot="Item3" id="Item.desert_throwing_knife" />
                     <equipment slot="Head" id="Item.tuareg" />
                     <equipment slot="Body" id="Item.reinforced_suede_armor" />
                     <equipment slot="Leg" id="Item.eastern_leather_boots" />
                     <equipment slot="Gloves" id="Item.rough_tied_bracers" />
-                    <!-- <equipment slot="Cape" id="Item.stitched_leather_shoulders" /> -->
+                    <equipment slot="Cape" id="Item.stitched_leather_shoulders" />
+                </EquipmentRoster>
+                <EquipmentRoster>
+                    <!-- <equipment slot="Item0" id="Item.eastern_spear_1_t2" /> -->
+                    <equipment slot="Item0" id="Item.aserai_mace_1_t2" />
+                    <equipment slot="Item1" id="Item.bound_desert_round_shield" />
+                    <equipment slot="Item2" id="Item.desert_throwing_knife" />
+                    <equipment slot="Item3" id="Item.desert_throwing_knife" />
+                    <equipment slot="Head" id="Item.tuareg" />
+                    <equipment slot="Body" id="Item.reinforced_suede_armor" />
+                    <equipment slot="Leg" id="Item.eastern_leather_boots" />
+                    <equipment slot="Gloves" id="Item.rough_tied_bracers" />
+                    <equipment slot="Cape" id="Item.stitched_leather_shoulders" />
+                </EquipmentRoster>
+                <EquipmentRoster>
+                    <!-- <equipment slot="Item0" id="Item.eastern_spear_1_t2" /> -->
+                    <equipment slot="Item0" id="Item.falchion_sword_t2" />
+                    <equipment slot="Item1" id="Item.bound_desert_round_shield" />
+                    <equipment slot="Item2" id="Item.desert_throwing_knife" />
+                    <equipment slot="Item3" id="Item.desert_throwing_knife" />
+                    <equipment slot="Head" id="Item.tuareg" />
+                    <equipment slot="Body" id="Item.reinforced_suede_armor" />
+                    <equipment slot="Leg" id="Item.eastern_leather_boots" />
+                    <equipment slot="Gloves" id="Item.rough_tied_bracers" />
+                    <equipment slot="Cape" id="Item.stitched_leather_shoulders" />
                 </EquipmentRoster>
                 <EquipmentSet id="aserai_troop_civilian_template_t1" civilian="true" />
             </Equipments>
@@ -432,6 +446,7 @@
         <xsl:copy>
             <xsl:apply-templates select="@*" />
             <xsl:attribute name="upgrade_requires">ItemCategory.war_horse</xsl:attribute>
+            <xsl:attribute name="default_group">Cavalry</xsl:attribute>
             <face>
                 <face_key_template value="BodyProperty.fighter_aserai" />
             </face>
@@ -469,6 +484,7 @@
     <xsl:template match='NPCCharacter[@id="aserai_mameluke_heavy_cavalry"]'>
         <xsl:copy>
             <xsl:apply-templates select="@*" />
+            <xsl:attribute name="default_group">Cavalry</xsl:attribute>
             <face>
                 <face_key_template value="BodyProperty.fighter_aserai" />
             </face>
@@ -3928,6 +3944,7 @@
         <!-- Sturgian Hardened Brigand - T4 -->
         <xsl:copy>
             <xsl:apply-templates select="@*" />
+            <xsl:attribute name="default_group">HorseArcher</xsl:attribute>
             <face>
                 <face_key_template value="BodyProperty.fighter_sturgia" />
             </face>
@@ -4003,7 +4020,7 @@
                     <equipment slot="Item0" id="Item.steppe_heavy_bow" />
                     <equipment slot="Item1" id="Item.blunt_arrows" />
                     <equipment slot="Item2" id="Item.western_spear_1_t2" />
-                    <equipment slot="Item3" id="Item.sturgia_sword_1_t2" />
+                    <equipment slot="Item3" id="Item.sturgia_axe_3_t3" />
                     <equipment slot="Head" id="Item.nasalhelm_over_mail" />
                     <equipment slot="Cape" id="Item.battanian_chainmail_shoulder_b" />
                     <equipment slot="Body" id="Item.vlandia_chainmail" />
@@ -4014,7 +4031,7 @@
                     <equipment slot="Item0" id="Item.steppe_heavy_bow" />
                     <equipment slot="Item1" id="Item.blunt_arrows" />
                     <equipment slot="Item2" id="Item.western_spear_1_t2" />
-                    <equipment slot="Item3" id="Item.sturgia_axe_2_t2" />
+                    <equipment slot="Item3" id="Item.sturgia_axe_3_t3" />
                     <equipment slot="Head" id="Item.nasal_helmet_with_mail" />
                     <equipment slot="Body" id="Item.sturgian_chainmale_longsleeve" />
                     <equipment slot="Leg" id="Item.northern_plated_boots" />
@@ -4024,7 +4041,7 @@
                     <equipment slot="Item0" id="Item.steppe_heavy_bow" />
                     <equipment slot="Item1" id="Item.blunt_arrows" />
                     <equipment slot="Item2" id="Item.western_spear_1_t2" />
-                    <equipment slot="Item3" id="Item.sturgia_axe_2_t2" />
+                    <equipment slot="Item3" id="Item.sturgia_axe_3_t3" />
                     <equipment slot="Head" id="Item.nasalhelm_over_mail" />
                     <equipment slot="Body" id="Item.sturgian_chainmale_longsleeve" />
                     <equipment slot="Leg" id="Item.northern_plated_boots" />
@@ -4157,7 +4174,7 @@
         <!-- Sturgian Horse Raider - T5 -->
         <xsl:copy>
             <xsl:apply-templates select="@*" />
-            <!-- <xsl:attribute name="default_group">HorseArcher</xsl:attribute> -->
+            <xsl:attribute name="default_group">HorseArcher</xsl:attribute>
             <face>
                 <face_key_template value="BodyProperty.fighter_sturgia" />
             </face>
@@ -4240,7 +4257,7 @@
                     <equipment slot="Item0" id="Item.nomad_bow" />
                     <equipment slot="Item1" id="Item.blunt_arrows" />
                     <equipment slot="Item2" id="Item.northern_spear_3_t4" />
-                    <equipment slot="Item3" id="Item.sturgia_axe_3_t3" />
+                    <equipment slot="Item3" id="Item.northern_battle_axe_t3" />
                     <equipment slot="Head" id="Item.sturgian_helmet_b_open" />
                     <equipment slot="Cape" id="Item.bearskin" />
                     <equipment slot="Cape" id="Item.rough_bearskin" />
@@ -4252,7 +4269,7 @@
                     <equipment slot="Item0" id="Item.nomad_bow" />
                     <equipment slot="Item1" id="Item.blunt_arrows" />
                     <equipment slot="Item2" id="Item.northern_spear_3_t4" />
-                    <equipment slot="Item3" id="Item.sturgia_axe_3_t3" />
+                    <equipment slot="Item3" id="Item.northern_battle_axe_t3" />
                     <equipment slot="Head" id="Item.sturgian_helmet_b_open" />
                     <equipment slot="Cape" id="Item.mail_shoulders" />
                     <equipment slot="Body" id="Item.nordic_sloven_over_mail" />

@@ -24,6 +24,11 @@ Khuzait Horse Archer hips/legs disappear at distance. Probably just need to chan
 ===========================================================================
 ===========================================================================
 
+Make new throwing axe heads. Probably increase damage.
+Remove Axe heads that are already throwing specific
+Include all in throwing axe crafting template and in throwing axe weapon description
+Remove vanilla ones from crafting template and weapon description.
+Update weapons to use new pieces
 
 
 ===========================================================================

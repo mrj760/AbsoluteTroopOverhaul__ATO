@@ -10,46 +10,46 @@ namespace std_troops
 {
     public class Fix : MBSubModuleBase
     {
-        //protected override void OnSubModuleLoad()
-        //{
-        //    // apply harmony patches
-        //    Harmony harmony = new Harmony("std_troops");
-        //    harmony.PatchAll();
-        //}
+        protected override void OnSubModuleLoad()
+        {
+            // apply harmony patches
+            Harmony harmony = new Harmony("std_troops");
+            harmony.PatchAll();
+        }
 
         private static bool PatchesApplied = false;
 
-        public override void OnGameInitializationFinished(Game game)
-        {
-            base.OnGameInitializationFinished(game);
+        //public override void OnGameInitializationFinished(Game game)
+        //{
+        //    base.OnGameInitializationFinished(game);
 
-            if (!(game.GameType is Campaign) || Fix.PatchesApplied)
-            {
-                return;
-            }
+        //    if (!(game.GameType is Campaign) || Fix.PatchesApplied)
+        //    {
+        //        return;
+        //    }
 
-            var harmony = new Harmony("std_troops");
+        //    var harmony = new Harmony("std_troops");
 
-            var assembly = typeof(Fix).Assembly;
+        //    var assembly = typeof(Fix).Assembly;
 
-            var types = AccessTools.GetTypesFromAssembly(assembly);
+        //    var types = AccessTools.GetTypesFromAssembly(assembly);
 
-            var failedPatches = new List<string>();
+        //    var failedPatches = new List<string>();
 
-            foreach (var type in types)
-            {
-                try
-                {
-                    new PatchClassProcessor(harmony, type).Patch();
-                }
-                catch (HarmonyException)
-                {
-                    failedPatches.Add(type.Name);
-                    Console.WriteLine(type.Name);
-                }
-            }
+        //    foreach (var type in types)
+        //    {
+        //        try
+        //        {
+        //            new PatchClassProcessor(harmony, type).Patch();
+        //        }
+        //        catch (HarmonyException)
+        //        {
+        //            failedPatches.Add(type.Name);
+        //            Console.WriteLine(type.Name);
+        //        }
+        //    }
 
-            Fix.PatchesApplied = true;
-        }
+        //    Fix.PatchesApplied = true;
+        //}
     }
 }
