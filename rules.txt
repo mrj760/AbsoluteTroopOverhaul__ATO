@@ -86,7 +86,7 @@ Exceptions:
 		2 * x
 			(e.g. Main stat @ Tier 5 goes up by 20)
 
-    Having 1 secondary stat has no effect on main stat.
+    	Having 1 secondary stat has no effect on main stat.
 
 	Having 2 secondary stats brings main stat down by: 
 		1 * x
