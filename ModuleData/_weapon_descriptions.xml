@@ -1209,8 +1209,8 @@
     <!-- Throwing Knives -->
     <WeaponDescription id="ThrowingKnife"
         weapon_class="ThrowingKnife"
-        item_usage_features="throwing">
-        <!-- item_usage_features="throwing:knife"> -->
+        item_usage_features="throwing:knife">
+        <!-- item_usage_features="throwing"> -->
         <WeaponFlags>
             <WeaponFlag value="RangedWeapon" />
             <WeaponFlag value="Consumable" />
@@ -1370,8 +1370,8 @@
     <!-- Throwing Axes -->
     <WeaponDescription id="ThrowingAxe"
         weapon_class="ThrowingAxe"
-        item_usage_features="throwing">
-        <!-- item_usage_features="throwing:axe"> -->
+        item_usage_features="throwing:axe">
+        <!-- item_usage_features="throwing"> -->
         <WeaponFlags>
             <WeaponFlag value="RangedWeapon" />
             <WeaponFlag value="Consumable" />

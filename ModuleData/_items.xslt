@@ -406,15 +406,26 @@
             <Pieces>
                 <Piece id="spear_blade_40"
                     Type="Blade"
-                    scale_factor="100" />
+                    scale_factor="140" />
                 <Piece id="spear_banner_10"
                     Type="Guard"
                     scale_factor="90" />
                 <Piece id="spear_handle_21"
                     Type="Handle"
-                    scale_factor="70" />
+                    scale_factor="50" />
             </Pieces>
         </xsl:copy>
+    </xsl:template>
+
+    <xsl:template match='CraftedItem[@id="western_spear_1_t2"]'>
+        <xsl:copy>
+            <xsl:apply-templates select="@*" />
+            <xsl:attribute name="name">{=hyq1zBg5}Simple Commoner Spear</xsl:attribute>
+            <Pieces>
+                <Piece id="spear_blade_1" Type="Blade" scale_factor="90" />
+                <Piece id="spear_handle_5" Type="Handle" scale_factor="90" />
+            </Pieces>
+        </xsl:copy> 
     </xsl:template>
 
 </xsl:stylesheet>

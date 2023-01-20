@@ -198,7 +198,7 @@
                 <BladeData stack_amount="6" physics_material="metal_weapon" body_name="bo_knife_a"
                     holster_mesh="throwing_dagger_quiver_2" holster_mesh_length="35.8">
                     <Thrust damage_type="Pierce" damage_factor="3.7" />
-                    <!-- <Swing damage_type="Cut" damage_factor="3.5" /> -->
+                    <Swing damage_type="Cut" damage_factor="3.5" />
                 </BladeData>
                 <Flags>
                     <Flag name="Civilian" type="ItemFlags" />
@@ -214,7 +214,7 @@
                 <BladeData stack_amount="6" physics_material="metal_weapon" body_name="bo_knife_a"
                     holster_mesh="throwing_dagger_quiver_2" holster_mesh_length="35.8">
                     <Thrust damage_type="Pierce" damage_factor="3.7" />
-                    <!-- <Swing damage_type="Cut" damage_factor="3.5" /> -->
+                    <Swing damage_type="Cut" damage_factor="3.5" />
                 </BladeData>
                 <Flags>
                     <Flag name="Civilian" type="ItemFlags" />
@@ -231,7 +231,7 @@
                 <BladeData stack_amount="6" physics_material="metal_weapon" body_name="bo_knife_a"
                     holster_mesh="throwing_dagger_quiver_3" holster_mesh_length="35.8">
                     <Thrust damage_type="Pierce" damage_factor="3.7" />
-                    <!-- <Swing damage_type="Cut" damage_factor="3.5" /> -->
+                    <Swing damage_type="Cut" damage_factor="3.5" />
                 </BladeData>
                 <Flags>
                     <Flag name="Civilian" type="ItemFlags" />
@@ -247,7 +247,7 @@
                 <BladeData stack_amount="6" physics_material="metal_weapon" body_name="bo_knife_a"
                     holster_mesh="throwing_dagger_quiver_1" holster_mesh_length="35.8">
                     <Thrust damage_type="Pierce" damage_factor="3.7" />
-                    <!-- <Swing damage_type="Cut" damage_factor="3.5" /> -->
+                    <Swing damage_type="Cut" damage_factor="3.5" />
                 </BladeData>
                 <Flags>
                     <Flag name="Civilian" type="ItemFlags" />
@@ -368,13 +368,13 @@
 
 
     <!-- Broad Leaf Shaped Spear Head -->
-    <!-- Increase Swing damage -->
+    <!-- Increase Swing damage and change to Cut damage -->
     <xsl:template match='CraftingPiece[@id="spear_blade_40"]'>
         <xsl:copy>
             <xsl:apply-templates select="@*" />
             <BladeData stack_amount="3" physics_material="wood_weapon" body_name="bo_spear_b">
                 <Thrust damage_type="Pierce" damage_factor="2.1" />
-                <Swing damage_type="Blunt" damage_factor="1.75" />
+                <Swing damage_type="Cut" damage_factor="1.8" />
             </BladeData>
             <Materials>
                 <Material id="Iron3" count="2" />
@@ -396,8 +396,25 @@
             </BladeData>
             <Flags>
                 <Flag name="CanBePickedUpFromCorpse" type="ItemFlags" />
-                <Flag name="CanDismount" />
+                <!-- <Flag name="CanDismount" /> -->
                 <Flag name="CanHook" />
+            </Flags>
+            <Materials>
+                <Material id="Iron4" count="2" />
+            </Materials>
+        </xsl:copy>
+    </xsl:template>
+
+    <!-- Steel Tipped Hooked Spear Head -->
+    <!-- Include the flag to dismount riders (since it's hooked) -->
+    <xsl:template match='CraftingPiece[@id="spear_blade_36"]'>
+        <xsl:copy>
+            <xsl:apply-templates select="@*" />
+            <BladeData stack_amount="3" physics_material="wood_weapon" body_name="bo_spear_b">
+                <Thrust damage_type="Pierce" damage_factor="2.4" />
+            </BladeData>
+            <Flags>
+                <Flag name="CanDismount" />
             </Flags>
             <Materials>
                 <Material id="Iron4" count="2" />

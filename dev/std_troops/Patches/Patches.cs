@@ -14,6 +14,7 @@ using TaleWorlds.Engine.InputSystem;
 using TaleWorlds.InputSystem;
 using TaleWorlds.Library;
 using TaleWorlds.MountAndBlade;
+
 namespace std_troops.Patches
 {
 
@@ -22,8 +23,8 @@ namespace std_troops.Patches
     {
         [HarmonyPrefix]
         [HarmonyPatch(typeof(Equipment), nameof(Equipment.GetRandomEquipmentElements))]
-        public static bool AssignWholeRoster(ref Equipment __result, ref BasicCharacterObject character, bool randomEquipmentModifier,
-            bool isCivilianEquipment = false, int seed = -1)
+        public static bool AssignWholeRoster(ref Equipment __result,
+            BasicCharacterObject character, bool randomEquipmentModifier, bool isCivilianEquipment = false, int seed = -1)
         {
             Equipment equipment = new Equipment(isCivilianEquipment);
             List<Equipment> list = character.AllEquipments.Where((Equipment eq) => eq.IsCivilian == isCivilianEquipment && !eq.IsEmpty()).ToList();
@@ -101,8 +102,8 @@ namespace std_troops.Patches
         /* Set the Maximum Skill-Level for calculation to 260 instead of 350. This should make all AI stronger. */
         [HarmonyPrefix]
         [HarmonyPatch(typeof(AgentStatCalculateModel), "CalculateAILevel")]
-        public static bool OverrideAILevelCalculation(
-            ref AgentStatCalculateModel __instance, ref float __result, Agent agent, int relevantSkillLevel)
+        public static bool OverrideAILevelCalculation(AgentStatCalculateModel __instance, ref float __result,
+            Agent agent, int relevantSkillLevel)
         {
             float diffmod = __instance.GetDifficultyModifier();
             __result = MBMath.ClampFloat((float)relevantSkillLevel / 260f * diffmod, 0.01f, diffmod);
@@ -118,12 +119,16 @@ namespace std_troops.Patches
         [HarmonyPostfix]
         [HarmonyPatch(typeof(AgentStatCalculateModel), "SetAiRelatedProperties")]
         public static void SetAiProperties(
-            ref AgentStatCalculateModel __instance, ref Agent agent, ref AgentDrivenProperties agentDrivenProperties, WeaponComponentData equippedItem, WeaponComponentData secondaryItem)
+            AgentStatCalculateModel __instance,
+            Agent agent, ref AgentDrivenProperties agentDrivenProperties,
+            WeaponComponentData equippedItem, WeaponComponentData secondaryItem)
         {
 
-            if (Mission.Current == null) return;
-            string agentname = agent.Character.Name.ToString(); // Debug info
-
+            if (Mission.Current == null || // not a mission
+                !(Mission.Current.IsFieldBattle || Mission.Current.IsSiegeBattle) // not a field battle or siege
+                || agent.IsPlayerControlled) // or working with player character
+                return;
+            //string agentname = agent.Character.Name.ToString(); // Debug info
 
             //** Get skill values
             MethodInfo GetMeleeSkill = typeof(AgentStatCalculateModel).GetMethod("GetMeleeSkill", BindingFlags.NonPublic | BindingFlags.Instance);
@@ -145,8 +150,8 @@ namespace std_troops.Patches
 
             //** Movement Penalties
             float v = agent.MovementVelocity.Length;
-            float prevmaxmoveunstpen = agentDrivenProperties.WeaponMaxUnsteadyAccuracyPenalty;
-            float prevrelmovepen = agentDrivenProperties.ReloadMovementPenaltyFactor;
+            //float prevmaxmoveunstpen = agentDrivenProperties.WeaponMaxUnsteadyAccuracyPenalty;
+            //float prevrelmovepen = agentDrivenProperties.ReloadMovementPenaltyFactor;
 
             float maxmoveunstpen = (efflvl - 1f) * (-.025f * (efflvl + v)) * (.2f * v); // y = (x-1) * -.025(x+v) * .2v
             float relmovepen = invefflvl; // y = 1-x ... vanilla : constant 1
@@ -156,39 +161,46 @@ namespace std_troops.Patches
 
 
             //** Rotation Penalty
-            float prevweaprotaccpen = agentDrivenProperties.WeaponRotationalAccuracyPenaltyInRadians;
+            //float prevweaprotaccpen = agentDrivenProperties.WeaponRotationalAccuracyPenaltyInRadians;
             float weaprotaccpen = .12f * invefflvl; // y = .12(1-x) ... less than vanilla ?
             agentDrivenProperties.WeaponRotationalAccuracyPenaltyInRadians = weaprotaccpen;
 
 
-            //** AI-Only Properties below
-            if (agent.IsPlayerControlled) return;
 
 
             //** Defense Probabilities (I think `def` will always be 0, 1, or 2, with 2 being the most defensive)
-            float prevshieldmissile = agentDrivenProperties.AiUseShieldAgainstEnemyMissileProbability;
-            float prevranddefchance = agentDrivenProperties.AiRandomizedDefendDirectionChance;
-            float shieldmissilechance;  // y = ln(x + z)        ... z is varying constant
-            float randdefchance;        // y = 1.2 - ln(x + z)  ... w is varying constant
-            float z;
+            //float prevshieldmissile = agentDrivenProperties.AiUseShieldAgainstEnemyMissileProbability;
+            //float prevranddefchance = agentDrivenProperties.AiRandomizedDefendDirectionChance;
+            float shieldmissilechance;
+            float randdefchance;
+            float z, m;
             if (def >= 1.9f)
             {
-                z = 1.1425f;
-                shieldmissilechance = MBMath.ClampFloat(MathF.Log(mellvl + z), 0f, .92f);
+                // y = m * ln(x + z)
+                m = .8f;
+                z = 1.68f;
+                shieldmissilechance = MBMath.ClampFloat(m * MathF.Log(mellvl + z), 0f, .92f);
+                // y = 1.2 - ln(x + z)
                 z = 2.265f;
                 randdefchance = MBMath.ClampFloat(1.2f - MathF.Log(mellvl + z), .08f, 1f);
             }
             else if (def >= .9f)
             {
-                z = .90105f;
-                shieldmissilechance = MBMath.ClampFloat(MathF.Log(mellvl + z), .25f, .95f);
+                // y = m * ln(x + z)
+                m = .6f;
+                z = 1.68f;
+                shieldmissilechance = MBMath.ClampFloat(m * MathF.Log(mellvl + z), 0f, .92f);
+                // y = 1.2 - ln(x + z)
                 z = 2.33f;
-                randdefchance = MBMath.ClampFloat(1.2f - MathF.Log(mellvl + z), .05f, 1f);
+                randdefchance = MBMath.ClampFloat(1.2f - MathF.Log(mellvl + z), .08f, 1f);
             }
             else // 0 `def` seems to be most common
             {
-                z = .80f;
-                shieldmissilechance = MBMath.ClampFloat(MathF.Log(mellvl + z), .45f, .98f);
+                // y = m * ln(x + z)
+                m = .4f;
+                z = 1.68f;
+                shieldmissilechance = MBMath.ClampFloat(m * MathF.Log(mellvl + z), 0f, .92f);
+                // y = 1.2 - ln(x + z)
                 z = 2.4f;
                 randdefchance = MBMath.ClampFloat(1.2f - MathF.Log(mellvl + z), .08f, 1f);
             }
@@ -197,12 +209,12 @@ namespace std_troops.Patches
 
 
             //** Shot Errors
-            float prevrangerleadmin = agentDrivenProperties.AiRangerLeadErrorMin;
-            //float prevrangerleadmax = agentDrivenProperties.AiRangerLeadErrorMax;
-            float prevshooterror = agentDrivenProperties.AiShooterError;
+            //float prevrangerleadmin = agentDrivenProperties.AiRangerLeadErrorMin;
+            ////float prevrangerleadmax = agentDrivenProperties.AiRangerLeadErrorMax;
+            //float prevshooterror = agentDrivenProperties.AiShooterError;
 
             float rangerleadmin = -.18f * invefflvl; // y = -.15(1-x) (more accurate than vanilla)
-                                                     //float rangerleadmax = .18f * invefflvl;  // y = .15(1-x)  (slightly less accurate than vanilla)
+            //float rangerleadmax = .18f * invefflvl;  // y = .15(1-x)  (slightly less accurate than vanilla)
             float shooterror = .01f - (.005f * efflvl); // y = .01 - .005x (vanilla is a flat .008 , now ranges from .01 to .005)
 
             agentDrivenProperties.AiRangerLeadErrorMin = rangerleadmin;
@@ -211,17 +223,6 @@ namespace std_troops.Patches
 
 
             //** Mounted units
-            if (agent.HasMount)
-            {
-                agentDrivenProperties.AiShooterError *= .33f; // Make mounted ranged troops more accurate
-
-                if (equippedItem != null)
-                {
-
-                    agentDrivenProperties.AiRangedHorsebackMissileRange *= .6f; // Make mounted throwers fire from closer distance
-                }
-            }
-
 
             //float prevhorsemissilerange = agentDrivenProperties.AiRangedHorsebackMissileRange;
             //float prevhorsechargedist = agentDrivenProperties.AiChargeHorsebackTargetDistFactor;
@@ -232,50 +233,64 @@ namespace std_troops.Patches
             //agentDrivenProperties.AiRangedHorsebackMissileRange = horsemissilerange;
             //agentDrivenProperties.AiChargeHorsebackTargetDistFactor = horsechargedist;
 
-
-            //** Checking conditions to see if formation should be changed
-            if (Mission.Current == null || !Mission.Current.IsFieldBattle)
-                goto SkipFormationChangeCheck;
-
-            int totalammo =
-                agent.Equipment.GetAmmoAmount(WeaponClass.Javelin)
-                + agent.Equipment.GetAmmoAmount(WeaponClass.ThrowingAxe)
-                + agent.Equipment.GetAmmoAmount(WeaponClass.ThrowingKnife)
-                + agent.Equipment.GetAmmoAmount(WeaponClass.Arrow)
-                + agent.Equipment.GetAmmoAmount(WeaponClass.Bolt);
-
-            if (totalammo == 0)
+            if (agent.HasMount)
             {
-                if (agent.Formation == null || agent.Formation.InitialClass == null)
+                if (eqitemskill == DefaultSkills.Throwing)
                 {
-                    if (agent.Team.GetFormation(FormationClass.Infantry) == null)
-                        goto SkipFormationChangeCheck;
-                    agent.Formation = agent.Team.GetFormation(FormationClass.Infantry);
-                }
-                else if (agent.Formation.InitialClass == FormationClass.HorseArcher)
-                {
-                    if (agent.Team.GetFormation(FormationClass.HeavyCavalry) != null)
-                        agent.Formation = agent.Team.GetFormation(FormationClass.HeavyCavalry);
-                    else if (agent.Team.GetFormation(FormationClass.Cavalry) != null)
-                        agent.Formation = agent.Team.GetFormation(FormationClass.Cavalry);
-                }
-                else if (agent.Formation.InitialClass == FormationClass.Ranged)
-                {
-                    if (agent.Team.GetFormation(FormationClass.HeavyInfantry) != null)
-                        agent.Formation = agent.Team.GetFormation(FormationClass.HeavyInfantry);
-                    else if (agent.Team.GetFormation(FormationClass.Infantry) != null)
-                        agent.Formation = agent.Team.GetFormation(FormationClass.Infantry);
+                    agentDrivenProperties.AiShooterError *= .26f; // Make mounted throwing troops more accurate
+                    // agentDrivenProperties.AiRangedHorsebackMissileRange *= .6f; // Make mounted throwing troops fire from closer distance
                 }
                 else
-                    goto SkipFormationChangeCheck;
+                    agentDrivenProperties.AiShooterError *= .33f; // Make mounted ranged troops more accurate
+
             }
-            else
-                goto SkipFormationChangeCheck;
+            else if (eqitemskill == DefaultSkills.Throwing)
+            {
+                agentDrivenProperties.AiShooterError *= .5f; // Make throwing foot troops more accurate
+            }
 
-            agent.SetShouldCatchUpWithFormation(true);
 
-        SkipFormationChangeCheck:
-            return;
+
+
+            //** Checking conditions to see if formation should be changed
+            //if (!Mission.Current.IsFieldBattle)
+            //    goto SkipFormationChangeCheck;
+
+            //int totalammo =
+            //    agent.Equipment.GetAmmoAmount(WeaponClass.Javelin)
+            //    + agent.Equipment.GetAmmoAmount(WeaponClass.ThrowingAxe)
+            //    + agent.Equipment.GetAmmoAmount(WeaponClass.ThrowingKnife)
+            //    + agent.Equipment.GetAmmoAmount(WeaponClass.Arrow)
+            //    + agent.Equipment.GetAmmoAmount(WeaponClass.Bolt);
+
+            //if (totalammo == 0)
+            //{
+            //    if (agent.Formation == null || agent.Formation.InitialClass == FormationClass.Unset)
+            //    {
+            //        if (agent.Team.GetFormation(FormationClass.Infantry) == null)
+            //            goto SkipFormationChangeCheck;
+            //        agent.Formation = agent.Team.GetFormation(FormationClass.Infantry);
+            //    }
+            //    else if (agent.Formation.InitialClass == FormationClass.HorseArcher)
+            //    {
+            //        if (agent.Team.GetFormation(FormationClass.Cavalry) != null)
+            //            agent.Formation = agent.Team.GetFormation(FormationClass.Cavalry);
+            //    }
+            //    else if (agent.Formation.InitialClass == FormationClass.Ranged)
+            //    {
+            //        if (agent.Team.GetFormation(FormationClass.Infantry) != null)
+            //            agent.Formation = agent.Team.GetFormation(FormationClass.Infantry);
+            //    }
+            //    else
+            //        goto SkipFormationChangeCheck;
+            //}
+            //else
+            //    goto SkipFormationChangeCheck;
+
+            ////agent.SetShouldCatchUpWithFormation(true);
+
+            //SkipFormationChangeCheck:
+            //return;
 
             //if (commaheld)
             //{
