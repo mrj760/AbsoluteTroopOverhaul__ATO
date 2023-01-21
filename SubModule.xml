@@ -1,6 +1,6 @@
 <Module>
-    <Name value="Standardized And Buffed Troops" />
-    <Id value="StandardizedAndBuffedTroops" />
+    <Name value="Absolute Troop OverHaul (ATO)" />
+    <Id value="ATO" />
     <Version value="v1.0.0" />
     <SingleplayerModule value="true" />
     <MultiplayerModule value="false" />
@@ -11,6 +11,7 @@
         <DependedModule Id="Sandbox" Optional="false"/>
         <DependedModule Id="StoryMode" Optional="false"/>
         <DependedModule Id="Bannerlord.Harmony" Optional="false"/>
+        <DependedModule Id="ATO-TroopFormationAI" Optional="true"/>
     </DependedModules>
     <SubModules>
         <SubModule>

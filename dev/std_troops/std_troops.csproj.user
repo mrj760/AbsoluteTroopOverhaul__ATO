@@ -9,4 +9,7 @@
   <PropertyGroup>
     <ProjectView>ProjectFiles</ProjectView>
   </PropertyGroup>
+  <PropertyGroup>
+    <ReferencePath>D:\Program Files\Steam\steamapps\common\Mount &amp; Blade II Bannerlord\bin\Win64_Shipping_Client\;D:\Program Files\Steam\steamapps\common\Mount &amp; Blade II Bannerlord\Modules\Native\bin\Win64_Shipping_Client\;D:\Program Files\Steam\steamapps\common\Mount &amp; Blade II Bannerlord\Modules\SandBox\bin\Win64_Shipping_Client\;D:\Program Files\Steam\steamapps\common\Mount &amp; Blade II Bannerlord\Modules\SandBoxCore\bin\Win64_Shipping_Client\;D:\Program Files\Steam\steamapps\common\Mount &amp; Blade II Bannerlord\Modules\StoryMode\bin\Win64_Shipping_Client\</ReferencePath>
+  </PropertyGroup>
 </Project>
