@@ -12,19 +12,17 @@ Changes:
 
         Stats updated according to Stat Rules (See "rules.txt").
 
-    Updated loadouts of recruits:
+    Loadouts of troops:
 
-        Recruits now have a 1/2 chance to take a non-peasant weapon to battle.
-
-        Recruits no longer take scythes to the battlefield.
-
-    Updated loadouts of troop trees in general:
+        Recruits have a 1/2 chance to spawn with a non-peasant weapon, and no longer equip scythes.
 
         Fixed many disparities in gear quality as troops advanced through their factions' upgrade trees.
+            (i.e. troops won't ever get worse gear upon level up)
 
-        Added/Removed/Changed weapons and armors of almost all troops to make them more useful and fitting to their roles.
+        Added/Removed/Changed weapons and armors of almost all troops to make them more useful,
+            more fitting to their roles, and more balanced.
 
-    Updated NPC party spawns:
+    NPC party spawns:
 
         TODO: NPC parties will now spawn with more diverse troops and will spawn making use of all their factions' troops.
         NPC parties across factions now have more equal starting numbers.
@@ -32,18 +30,32 @@ Changes:
         TODO: Forest/Sea-Raider/Mountain/Desert/Steppe Bandit parties will now always include a Bandit Boss.
 
     Gear:
-        Updated vanilla weapons and created new weapons to offer more use and variety.
+        Updated vanilla weapons to offer more use and variety.
 
-        Update armors to offer more use and variety.
+        Created new weapons to offer more use and variety.
+
+        Updated armors to offer more use and variety.
 
     AI:
         
         Tweaked various AI settings to make in-mission troops generally less weak.
 
+        Troops will now spawn with entire equipment rosters. Meaning however they appear in the
+            encyclopedia is exacatly how they will appear on the battle field.
+
+        Included most of RBM's AI logic. From it, I removed the frontline behavior where troops
+            battle very meekly. I also removed their AI stat parameters in favor of my own.
+
+    Gameplay:
+
+        When going from normal horse to war horse upon upgrading one of your troops, you will retrieve the horse which
+            the troop was using before. Didn't make sense to me that horses would just be thrown away.
+
+
 To install:
 
     1.) Unzip me into your "Mount & Blade II Bannerlord/Modules" folder.
-    2.) Check the box in the Mods section of the game launcher.
+    2.) Check the associated boxes in the Mods section of the game launcher
 
 To uninstall:
     
