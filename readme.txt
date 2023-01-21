@@ -1,14 +1,17 @@
 Goals:
     
     Balance the stats and equipments of all vanilla fighters. Make factions play uniquely.
+
     Balance factions to have a 50/50 chance of winning/losing in battles with roughly equal troop compositions, 
         equal power levels, and without the aid of any captain perks. (Just straight up troops vs troops)
 
+    Fix a few other issues which bothered me.
+
 Changes: 
 
-    Updated, buffed, and finely balanced stats and loadouts of all Vanilla Standard/Royal/Militia/Mercenary/Bandit Troops:
+    Updated, buffed, and finely balanced stats and loadouts of all vanilla Standard/Royal/Militia/Merc/Bandit Troops:
 
-        TODO: Militia/Merc/Bandits
+        TODO: Vlandia/Militia/Merc/Bandits
 
         Stats updated according to Stat Rules (See "rules.txt").
 
@@ -44,7 +47,9 @@ Changes:
             encyclopedia is exacatly how they will appear on the battle field.
 
         Included most of RBM's AI logic. From it, I removed the frontline behavior where troops
-            battle very meekly. I also removed their AI stat parameters in favor of my own.
+            battle very meekly in mini fight clubs. I also removed their AI stat parameters in favor of my own.
+            Now the only thing that remains is the most important part, the formation logic.
+            Infantry, Archers, and Cavalry will now take advantage of the much smarter AI provided by RBM.
 
     Gameplay:
 
