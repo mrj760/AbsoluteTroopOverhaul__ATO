@@ -4257,7 +4257,7 @@
 
                 <EquipmentRoster>
                     <equipment slot="Item0" id="Item.sturgia_sword_5_t5" />
-                    <equipment slot="Item1" id="Item.heavy_round_shield" />
+                    <!-- <equipment slot="Item1" id="Item.heavy_round_shield" /> -->
                     <equipment slot="Item2" id="Item.highland_spear_4_t4" />
                     <equipment slot="Item3" id="Item.northern_javelin_3_t4" />
                     <equipment slot="Head" id="Item.sturgia_heavy_cavalary_helmet" />
