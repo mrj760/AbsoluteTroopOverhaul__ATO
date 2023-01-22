@@ -55,32 +55,37 @@ namespace ato.Patches
         }
     }
 
+    // This patch looks weird bc I was experimenting with the structure
     [HarmonyPatch]
-    public class GiveHorseBackOnUpgrade
+    public class Hold
     {
-        [HarmonyPostfix]
-        [HarmonyPatch(typeof(CampaignEvents), "OnPlayerUpgradedTroops")]
-        public static void AddHorseBackToInventoryPatch(CharacterObject upgradeFromTroop, CharacterObject upgradeToTroop, int number)
+        [HarmonyPatch(typeof(CampaignEvents))]
+        public class GiveHorseBackOnUpgrade
         {
-            // if both troop versions have a horse
-            if (upgradeFromTroop.HasMount() && upgradeToTroop.HasMount())
+            [HarmonyPostfix]
+            [HarmonyPatch("OnPlayerUpgradedTroops")]
+            public static void AddHorseBackToInventoryPatch(CharacterObject upgradeFromTroop, CharacterObject upgradeToTroop, int number)
             {
-                var horse = upgradeFromTroop.Equipment.Horse.Item;
-                // if the upgraded version doesn't require a horse from the player's inventory, return
-                // if both troop versions have the same horse, return
-                if (!upgradeToTroop.UpgradeRequiresItemFromCategory.IsAnimal
-                    || horse.Equals(upgradeToTroop.Equipment.Horse.Item))
+                // if both troop versions have a horse
+                if (upgradeFromTroop.HasMount() && upgradeToTroop.HasMount())
                 {
-                    return;
+                    var horse = upgradeFromTroop.Equipment.Horse.Item;
+                    // if the upgraded version doesn't require a horse from the player's inventory, return
+                    // if both troop versions have the same horse, return
+                    if (!upgradeToTroop.UpgradeRequiresItemFromCategory.IsAnimal
+                        || horse.Equals(upgradeToTroop.Equipment.Horse.Item))
+                    {
+                        return;
+                    }
+                    // add the From's horse back to the player's inventory
+                    var party = MobileParty.MainParty;
+                    var inv = party.ItemRoster;
+                    var item = new ItemRosterElement(horse, number);
+                    inv.Add(item);
+                    var msg = "Horse" + (number > 1 ? "s" : "") + " Retrived: ";
+                    msg += (number > 1 ? number + " " : "") + item.EquipmentElement.GetModifiedItemName();
+                    MBInformationManager.AddQuickInformation(new TaleWorlds.Localization.TextObject(msg));
                 }
-                // add the From's horse back to the player's inventory
-                var party = MobileParty.MainParty;
-                var inv = party.ItemRoster;
-                var item = new ItemRosterElement(horse, number);
-                inv.Add(item);
-                var msg = "Horse" + (number > 1 ? "s" : "") + " Retrived: ";
-                msg += (number > 1 ? number + " " : "") + item.EquipmentElement.GetModifiedItemName();
-                MBInformationManager.AddQuickInformation(new TaleWorlds.Localization.TextObject(msg));
             }
         }
     }
