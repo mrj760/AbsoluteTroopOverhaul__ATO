@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace std_troops.Properties {
+namespace ato.Properties {
     
     
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]

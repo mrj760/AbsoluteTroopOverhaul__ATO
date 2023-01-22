@@ -7,14 +7,14 @@ using TaleWorlds.Library;
 using TaleWorlds.MountAndBlade;
 using System.Reflection;
 
-namespace std_troops
+namespace ato
 {
     public class Fix : MBSubModuleBase
     {
         protected override void OnSubModuleLoad()
         {
             // apply harmony patches
-            Harmony harmony = new Harmony("std_troops");
+            Harmony harmony = new Harmony("ato");
             harmony.PatchAll();
         }
 

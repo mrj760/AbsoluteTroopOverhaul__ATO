@@ -15,7 +15,7 @@ using TaleWorlds.InputSystem;
 using TaleWorlds.Library;
 using TaleWorlds.MountAndBlade;
 
-namespace std_troops.Patches
+namespace ato.Patches
 {
 
     [HarmonyPatch]
@@ -253,6 +253,7 @@ namespace std_troops.Patches
 
 
             //** Checking conditions to see if formation should be changed
+            /**
             //if (!Mission.Current.IsFieldBattle)
             //    goto SkipFormationChangeCheck;
 
@@ -295,7 +296,7 @@ namespace std_troops.Patches
             //if (commaheld)
             //{
             //    Console.Write("Hello");
-            //}
+            //}*/
         }
     }
 }
