@@ -9,9 +9,6 @@ using TaleWorlds.CampaignSystem;
 using TaleWorlds.CampaignSystem.CampaignBehaviors;
 using TaleWorlds.CampaignSystem.Party;
 using TaleWorlds.Core;
-using TaleWorlds.Engine;
-using TaleWorlds.Engine.InputSystem;
-using TaleWorlds.InputSystem;
 using TaleWorlds.Library;
 using TaleWorlds.MountAndBlade;
 
@@ -26,27 +23,28 @@ namespace ato.Patches
         public static bool AssignWholeRoster(ref Equipment __result,
             BasicCharacterObject character, bool randomEquipmentModifier, bool isCivilianEquipment = false, int seed = -1)
         {
-            Equipment equipment = new Equipment(isCivilianEquipment);
-            List<Equipment> list = character.AllEquipments.Where((Equipment eq) => eq.IsCivilian == isCivilianEquipment && !eq.IsEmpty()).ToList();
+            var equipment = new Equipment(isCivilianEquipment);
+            var list = character.AllEquipments.Where((Equipment eq) => eq.IsCivilian == isCivilianEquipment && !eq.IsEmpty()).ToList();
             if (list.IsEmpty())
             {
                 __result = equipment;
                 return false;
             }
 
-            int count = list.Count;
-            Random random = new Random(seed);
-            int weaponSet = MBRandom.RandomInt(count);
-            for (int i = 0; i < 12; i++)
+            var count = list.Count;
+            var random = new Random(seed);
+            var weaponSet = MBRandom.RandomInt(count);
+            for (var i = 0; i < 12; i++)
             {
                 equipment[i] = list[weaponSet].GetEquipmentFromSlot((EquipmentIndex)i);
-                if (randomEquipmentModifier)
+
+                if (!randomEquipmentModifier)
+                    continue;
+
+                var itemModifier = equipment[i].Item?.ItemComponent?.ItemModifierGroup?.GetRandomItemModifierLootScoreBased();
+                if (itemModifier != null)
                 {
-                    ItemModifier itemModifier = equipment[i].Item?.ItemComponent?.ItemModifierGroup?.GetRandomItemModifierLootScoreBased();
-                    if (itemModifier != null)
-                    {
-                        equipment[i].SetModifier(itemModifier);
-                    }
+                    equipment[i].SetModifier(itemModifier);
                 }
             }
 
@@ -67,25 +65,25 @@ namespace ato.Patches
             public static void AddHorseBackToInventoryPatch(CharacterObject upgradeFromTroop, CharacterObject upgradeToTroop, int number)
             {
                 // if both troop versions have a horse
-                if (upgradeFromTroop.HasMount() && upgradeToTroop.HasMount())
+                if (!upgradeFromTroop.HasMount() || !upgradeToTroop.HasMount())
+                    return;
+
+                var horse = upgradeFromTroop.Equipment.Horse.Item;
+                // if the upgraded version doesn't require a horse from the player's inventory, return
+                // if both troop versions have the same horse, return
+                if (!upgradeToTroop.UpgradeRequiresItemFromCategory.IsAnimal
+                    || horse.Equals(upgradeToTroop.Equipment.Horse.Item))
                 {
-                    var horse = upgradeFromTroop.Equipment.Horse.Item;
-                    // if the upgraded version doesn't require a horse from the player's inventory, return
-                    // if both troop versions have the same horse, return
-                    if (!upgradeToTroop.UpgradeRequiresItemFromCategory.IsAnimal
-                        || horse.Equals(upgradeToTroop.Equipment.Horse.Item))
-                    {
-                        return;
-                    }
-                    // add the From's horse back to the player's inventory
-                    var party = MobileParty.MainParty;
-                    var inv = party.ItemRoster;
-                    var item = new ItemRosterElement(horse, number);
-                    inv.Add(item);
-                    var msg = "Horse" + (number > 1 ? "s" : "") + " Retrived: ";
-                    msg += (number > 1 ? number + " " : "") + item.EquipmentElement.GetModifiedItemName();
-                    MBInformationManager.AddQuickInformation(new TaleWorlds.Localization.TextObject(msg));
+                    return;
                 }
+                // add the From's horse back to the player's inventory
+                var party = MobileParty.MainParty;
+                var inv = party.ItemRoster;
+                var item = new ItemRosterElement(horse, number);
+                inv.Add(item);
+                var msg = "Horse" + (number > 1 ? "s" : "") + " Retrived: ";
+                msg += (number > 1 ? number + " " : "") + item.EquipmentElement.GetModifiedItemName();
+                MBInformationManager.AddQuickInformation(new TaleWorlds.Localization.TextObject(msg));
             }
         }
     }
@@ -107,10 +105,10 @@ namespace ato.Patches
         /* Set the Maximum Skill-Level for calculation to 260 instead of 350. This should make all AI stronger. */
         [HarmonyPrefix]
         [HarmonyPatch(typeof(AgentStatCalculateModel), "CalculateAILevel")]
-        public static bool OverrideAILevelCalculation(AgentStatCalculateModel __instance, ref float __result,
+        public static bool OverrideAILevelCalculation(ref AgentStatCalculateModel __instance, ref float __result,
             Agent agent, int relevantSkillLevel)
         {
-            float diffmod = __instance.GetDifficultyModifier();
+            var diffmod = __instance.GetDifficultyModifier();
             __result = MBMath.ClampFloat((float)relevantSkillLevel / 260f * diffmod, 0.01f, diffmod);
             return false;
         }
@@ -129,45 +127,45 @@ namespace ato.Patches
             WeaponComponentData equippedItem, WeaponComponentData secondaryItem)
         {
 
-            if (Mission.Current == null || // not a mission
-                !(Mission.Current.IsFieldBattle || Mission.Current.IsSiegeBattle) // not a field battle or siege
-                || agent.IsPlayerControlled) // or working with player character
+            if (Mission.Current == null // not a mission
+                || (!(Mission.Current.IsFieldBattle && !Mission.Current.IsSiegeBattle)) // not a field battle and not a siege battle
+                || agent.IsPlayerControlled || !agent.IsAIControlled) // or working with player character
                 return;
             //string agentname = agent.Character.Name.ToString(); // Debug info
 
             //** Get skill values
-            MethodInfo GetMeleeSkill = typeof(AgentStatCalculateModel).GetMethod("GetMeleeSkill", BindingFlags.NonPublic | BindingFlags.Instance);
-            GetMeleeSkill.DeclaringType.GetMethod("GetMeleeSkill");
-            SkillObject eqitemskill = equippedItem == null ? DefaultSkills.Athletics : equippedItem.RelevantSkill;
-            SkillObject secitemskill = secondaryItem == null ? null : secondaryItem.RelevantSkill;
-            int melskill = (int)GetMeleeSkill.Invoke(__instance, new object[] { agent, equippedItem, secondaryItem });
-            int effskill = __instance.GetEffectiveSkill(agent.Character, agent.Origin, agent.Formation, eqitemskill);
+            var GetMeleeSkill = typeof(AgentStatCalculateModel).GetMethod("GetMeleeSkill", BindingFlags.NonPublic | BindingFlags.Instance);
+            var _ = GetMeleeSkill?.DeclaringType?.GetMethod("GetMeleeSkill");
+            var eqitemskill = equippedItem == null ? DefaultSkills.Athletics : equippedItem.RelevantSkill;
+            var secitemskill = secondaryItem?.RelevantSkill;
+            // ReSharper disable once PossibleNullReferenceException
+            var melskill = (int)GetMeleeSkill.Invoke(__instance, new object[] { agent, equippedItem, secondaryItem });
+            var effskill = __instance.GetEffectiveSkill(agent.Character, agent.Origin, agent.Formation, eqitemskill);
 
 
             //** Translate skill values to usable numbers for AI calculation
-            float diffmod = __instance.GetDifficultyModifier();
-            float mellvl = CalcAILevel(melskill, diffmod);
-            float invmellvl = MBMath.ClampFloat(1f - mellvl, 0.01f, .9999f);
-            float efflvl = CalcAILevel(effskill, diffmod);
-            float invefflvl = MBMath.ClampFloat(1f - efflvl, 0.01f, .9999f);
-            float def = agent.Defensiveness;
+            var diffmod = __instance.GetDifficultyModifier();
+            var mellvl = CalcAILevel(melskill, diffmod);
+            var invmellvl = MBMath.ClampFloat(1f - mellvl, 0.01f, .9999f);
+            var efflvl = CalcAILevel(effskill, diffmod);
+            var invefflvl = MBMath.ClampFloat(1f - efflvl, 0.01f, .9999f);
+            var def = agent.Defensiveness;
 
 
             //** Movement Penalties
-            float v = agent.MovementVelocity.Length;
+            var v = agent.MovementVelocity.Length;
             //float prevmaxmoveunstpen = agentDrivenProperties.WeaponMaxUnsteadyAccuracyPenalty;
             //float prevrelmovepen = agentDrivenProperties.ReloadMovementPenaltyFactor;
 
-            float maxmoveunstpen = (efflvl - 1f) * (-.025f * (efflvl + v)) * (.2f * v); // y = (x-1) * -.025(x+v) * .2v
-            float relmovepen = invefflvl; // y = 1-x ... vanilla : constant 1
+            var maxmoveunstpen = (efflvl - 1f) * (-.025f * (efflvl + v)) * (.2f * v); // y = (x-1) * -.025(x+v) * .2v
 
             agentDrivenProperties.WeaponMaxUnsteadyAccuracyPenalty = maxmoveunstpen;
-            agentDrivenProperties.ReloadMovementPenaltyFactor = relmovepen;
+            agentDrivenProperties.ReloadMovementPenaltyFactor = invefflvl;
 
 
             //** Rotation Penalty
             //float prevweaprotaccpen = agentDrivenProperties.WeaponRotationalAccuracyPenaltyInRadians;
-            float weaprotaccpen = .12f * invefflvl; // y = .12(1-x) ... less than vanilla ?
+            var weaprotaccpen = .12f * invefflvl; // y = .12(1-x) ... less than vanilla ?
             agentDrivenProperties.WeaponRotationalAccuracyPenaltyInRadians = weaprotaccpen;
 
 
@@ -213,18 +211,21 @@ namespace ato.Patches
             agentDrivenProperties.AiRandomizedDefendDirectionChance = randdefchance;
 
 
-            //** Shot Errors
+            //** Shooting Properties
             //float prevrangerleadmin = agentDrivenProperties.AiRangerLeadErrorMin;
             ////float prevrangerleadmax = agentDrivenProperties.AiRangerLeadErrorMax;
             //float prevshooterror = agentDrivenProperties.AiShooterError;
 
-            float rangerleadmin = -.18f * invefflvl; // y = -.15(1-x) (more accurate than vanilla)
+            var rangerleadmin = -.18f * invefflvl; // y = -.15(1-x) (more accurate than vanilla)
             //float rangerleadmax = .18f * invefflvl;  // y = .15(1-x)  (slightly less accurate than vanilla)
-            float shooterror = .01f - (.005f * efflvl); // y = .01 - .005x (vanilla is a flat .008 , now ranges from .01 to .005)
+            var shooterror = .01f - (.005f * efflvl); // y = .01 - .005x (vanilla is a flat .008 , now ranges from .01 to .005)
 
             agentDrivenProperties.AiRangerLeadErrorMin = rangerleadmin;
             //agentDrivenProperties.AiRangerLeadErrorMax = rangerleadmax;
             agentDrivenProperties.AiShooterError = shooterror;
+
+            //agentDrivenProperties.WeaponBestAccuracyWaitTime = 1.33f;
+            agentDrivenProperties.WeaponBestAccuracyWaitTime = MathF.Log(1-(.396f*efflvl)) + 1.5f;
 
 
             //** Mounted units
@@ -252,6 +253,7 @@ namespace ato.Patches
             else if (eqitemskill == DefaultSkills.Throwing)
             {
                 agentDrivenProperties.AiShooterError *= .5f; // Make throwing foot troops more accurate
+                agentDrivenProperties.WeaponBestAccuracyWaitTime *= .5f;
             }
 
 

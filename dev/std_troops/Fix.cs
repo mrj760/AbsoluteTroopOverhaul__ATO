@@ -1,11 +1,5 @@
 ﻿using HarmonyLib;
-using System.Collections.Generic;
-using System;
-using TaleWorlds.CampaignSystem;
-using TaleWorlds.Core;
-using TaleWorlds.Library;
 using TaleWorlds.MountAndBlade;
-using System.Reflection;
 
 namespace ato
 {
@@ -14,8 +8,9 @@ namespace ato
         protected override void OnSubModuleLoad()
         {
             // apply harmony patches
-            Harmony harmony = new Harmony("ato");
+            var harmony = new Harmony("ato");
             harmony.PatchAll();
+            base.OnSubModuleLoad();
         }
 
     }
