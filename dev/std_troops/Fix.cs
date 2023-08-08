@@ -10,7 +10,7 @@ namespace ato
             // apply harmony patches
             var harmony = new Harmony("ato");
             harmony.PatchAll();
-            base.OnSubModuleLoad();
+            //base.OnSubModuleLoad();
         }
 
     }

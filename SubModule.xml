@@ -1,16 +1,12 @@
 <Module>
+    <logging enabled="true"/>
     <Name value="Absolute Troop OverHaul (ATO)" />
     <Id value="ATO" />
     <Version value="v1.0.0" />
     <SingleplayerModule value="true" />
     <MultiplayerModule value="false" />
     <DependedModules>
-        <DependedModule Id="Native" Optional="false"/>
-        <DependedModule Id="SandBoxCore" Optional="false"/>
-        <DependedModule Id="Sandbox" Optional="false"/>
-        <DependedModule Id="StoryMode" Optional="false"/>
         <DependedModule Id="Bannerlord.Harmony" Optional="false"/>
-        <DependedModule Id="ATOTroopFormationAI" Optional="true"/>
     </DependedModules>
     <SubModules>
         <SubModule>
